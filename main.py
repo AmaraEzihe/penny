@@ -241,30 +241,32 @@ def getaccountbycusid(cusid):
 @app.route('/account/<nuban>',methods=['GET'])
 @basic_auth.required
 def getaccountbynuban(nuban):
-   
-     result = db.session.execute(text('select a.cusid,c.fullname,a.account_number,a.account_type,a.balance,a.status,a.transaction_limit from accounts as a,customers as c where a.account_number = :value and c.id = a.cusid;'), {"value": nuban})
-     result = result.fetchall()
-     try: 
-      details = {
-      'CusID':result[0][0],
-      'Fullname':result[0][1],
-      'Email':result[0][2],
-      'Gender':result[0][3],
-      'Phone':result[0][4],
-      'BVN':fernet.decrypt(result[0][10]).decode(),
-      'NIN':fernet.decrypt(result[0][11]).decode(),
-      'Accounts':{'NoOfAccounts': len(result),}}
-  
-      for i, row in enumerate(result, start=1):
-        details["Accounts"][f"account_{i}"] = {
-        "type": row[6],
-        "account_no": row[5],
-        "balance": float(row[7]),  
-        "status": row[8],
-        "limit": float(row[9])}
-     except:
-         abort(400,"This account does not exist")
-     return jsonify(details),200
+    print("ok")
+    #  result = db.session.execute(text('select a.cusid,c.fullname,a.account_number,a.account_type,a.balance,a.status,a.transaction_limit from accounts as a,customers as c where a.account_number = :value and c.id = a.cusid;'), {"value": nuban})
+    #  result = result.fetchall()
+    #  print(result)
+    #  print("lololololo")
+    # #  try: 
+    #  details = {
+    #  'CusID':result[0][0],
+    #  'Fullname':result[0][1],
+    #  'Email':result[0][2],
+    #  'Gender':result[0][3],
+    #  'Phone':result[0][4],
+    #  'BVN':fernet.decrypt(result[0][10]).decode(),
+    #  'NIN':fernet.decrypt(result[0][11]).decode(),
+    #  'Accounts':{'NoOfAccounts': len(result),}}
+ 
+    #  for i, row in enumerate(result, start=1):
+    #    details["Accounts"][f"account_{i}"] = {
+    #    "type": row[6],
+    #    "account_no": row[5],
+    #    "balance": float(row[7]),  
+    #    "status": row[8],
+    #    "limit": float(row[9])}
+    # #  except:
+    # #      abort(400,"This account does not exist")
+    #  return jsonify(details),200
 
 @app.route('/account/<nuban>/status',methods=['PATCH'])
 @basic_auth.required
@@ -320,5 +322,5 @@ def limitmanagement(nuban):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
-    #app.run(debug=True)
+    #app.run(host="0.0.0.0", port=5000)
+    app.run(debug=True)
