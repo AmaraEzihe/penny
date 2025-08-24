@@ -242,7 +242,7 @@ def getaccountbycusid(cusid):
 @basic_auth.required
 def getaccountbynuban(nuban):
    
-     result = db.session.execute(text('select a.cusid,c.fullname,a.account_number,a.account_type,a.balance,a.status,a.transaction_limitfrom accounts as a,customers as c where a.account_number = :value and c.id = a.cusid;'), {"value": nuban})
+     result = db.session.execute(text('select a.cusid,c.fullname,a.account_number,a.account_type,a.balance,a.status,a.transaction_limit from accounts as a,customers as c where a.account_number = :value and c.id = a.cusid;'), {"value": nuban})
      result = result.fetchall()
      try: 
       details = {
