@@ -213,7 +213,7 @@ def createbycusid():
 @basic_auth.required
 def getaccountbycusid(cusid):
    
-     result = db.session.execute(text('SELECT c.id,c.fullname,c.email,c.gender,c.phone,a.account_number,a.account_type,a.balance,a.status,a.transaction_limit,bn.BVN,bn.NIN FROM pennybank.customers AS c INNER JOIN pennybank.accounts AS a ON c.id = a.cusid INNER JOIN pennybank.bvnninrecords AS bn ON c.id = bn.cusid WHERE c.id = :value;'), {"value": cusid})
+     result = db.session.execute(text('SELECT c.id,c.fullname,c.email,c.gender,c.phone,a.account_number,a.account_type,a.balance,a.status,a.transaction_limit,bn.BVN,bn.NIN FROM customers AS c INNER JOIN accounts AS a ON c.id = a.cusid INNER JOIN bvnninrecords AS bn ON c.id = bn.cusid WHERE c.id = :value;'), {"value": cusid})
      result = result.fetchall()
      try: 
       details = {
@@ -242,7 +242,7 @@ def getaccountbycusid(cusid):
 @basic_auth.required
 def getaccountbynuban(nuban):
    
-     result = db.session.execute(text('select a.cusid,c.fullname,a.account_number,a.account_type,a.balance,a.status,a.transaction_limitfrom pennybank.accounts as a,pennybank.customers as c where a.account_number = :value and c.id = a.cusid;'), {"value": nuban})
+     result = db.session.execute(text('select a.cusid,c.fullname,a.account_number,a.account_type,a.balance,a.status,a.transaction_limitfrom accounts as a,customers as c where a.account_number = :value and c.id = a.cusid;'), {"value": nuban})
      result = result.fetchall()
      try: 
       details = {
