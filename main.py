@@ -209,7 +209,7 @@ def createbycusid():
   return jsonify({"Message":"New Account Created Successfully"}),200
 
 
-@app.route('/account/<cusid>',methods=['GET'])
+@app.route('/account/by-cusid/<cusid>',methods=['GET'])
 @basic_auth.required
 def getaccountbycusid(cusid):
    
@@ -238,32 +238,24 @@ def getaccountbycusid(cusid):
      return jsonify(details),200
 
 
-@app.route('/account/<nuban>',methods=['GET'])
+@app.route('/account/by-nuban/<nuban>',methods=['GET'])
 @basic_auth.required
 def getaccountbynuban(nuban):
    
      result = db.session.execute(text('select a.cusid,c.fullname,a.account_number,a.account_type,a.balance,a.status,a.transaction_limit from accounts as a,customers as c where a.account_number = :value and c.id = a.cusid;'), {"value": nuban})
-     result = result.fetchall()
-     try: 
-      details = {
-      'CusID':result[0][0],
-      'Fullname':result[0][1],
-      'Email':result[0][2],
-      'Gender':result[0][3],
-      'Phone':result[0][4],
-      'BVN':fernet.decrypt(result[0][10]).decode(),
-      'NIN':fernet.decrypt(result[0][11]).decode(),
-      'Accounts':{'NoOfAccounts': len(result),}}
-  
-      for i, row in enumerate(result, start=1):
-        details["Accounts"][f"account_{i}"] = {
-        "type": row[6],
-        "account_no": row[5],
-        "balance": float(row[7]),  
-        "status": row[8],
-        "limit": float(row[9])}
-     except:
-      abort(400,"This account does not exist")
+     row = result.fetchone()
+     if not row:
+      abort(400,"This account does not exist->")
+    
+     details = {
+     'CusID':row[0],
+     'Fullname':row[1],
+     'Accountnumber':row[2],
+     'Accounttype':row[3],
+     'Balance':row[4],
+     'Account State':row[5],
+     "limit": row[6]}
+ 
      return jsonify(details),200
 
 @app.route('/account/<nuban>/status',methods=['PATCH'])
